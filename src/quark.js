@@ -1,5 +1,5 @@
 /*
-    quark, another tiny DOM utility
+    quark, build your own framework from scratch
 
     Version     : 1.0.1
     Author      : Aurélien Delogu (dev@dreamysource.fr)
