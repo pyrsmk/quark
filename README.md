@@ -1,7 +1,7 @@
 quark 1.0.1
 ===========
 
-Quark is a small javascript library that aims let you build your own framework almost from scratch. It brings a different syntax approach than the other frameworks like the jQuery's, that seemed to me a lot more intuitive.
+quark is a small javascript library that aims let you build your own framework almost from scratch. It brings a different syntax approach than the other frameworks like the jQuery's, that seemed to me a lot more intuitive.
 
 Basics
 ------
@@ -29,7 +29,7 @@ Finally, if you need the original node from a wrapped node, just do : `$('#somei
 Example
 -------
 
-Here's an example, based on (nut)[https://github.com/pyrsmk/nut], (domReady)[https://github.com/ded/domready], (Gator)[http://craig.is/riding/gators], (morpheus)[https://github.com/ded/morpheus] and (qwest)[https://github.com/pyrsmk/qwest]:
+Here's an example, based on [nut](https://github.com/pyrsmk/nut), [domReady](https://github.com/ded/domready), [Gator](http://craig.is/riding/gators), [morpheus](https://github.com/ded/morpheus) and [qwest](https://github.com/pyrsmk/qwest):
 
 ```javascript
 // Set the selector engine
@@ -123,4 +123,4 @@ Here's the API:
 License
 -------
 
-Quark is under the MIT license.
+quark is under the MIT license.
