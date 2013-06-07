@@ -1,0 +1,12 @@
+{
+    "browser"   : true,
+    "predef"    : ["module","log"],
+    "boss"      : true,
+    "curly"     : true,
+    "eqnull"    : true,
+    "newcap"    : true,
+    "undef"     : true,
+    "loopfunc"  : true,
+    "proto"     : true,
+    "newcap"    : false
+}
