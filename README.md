@@ -8,11 +8,11 @@ Basics
 
 Getting nodes is assumed by `$()`, which returns one and only one node, and `$$()` which returns a list of nodes. These nodes are wrapped by quark to expose several methods (like in the starter pack, see below).
 
-The node list returned by `$$()` is shipped with an `each` method (the example uses the starter pack):
+The node list returned by `$$()` is shipped with an `each` method :
 
 ```javascript
 $$('.someclass').each(function(){
-    // Access to the current node
+    // Access to the current node (with the starter pack)
     this.css('color','blue');
 });
 ```
@@ -29,19 +29,16 @@ Finally, if you need the original node from a wrapped node, just do : `$('#somei
 Example
 -------
 
-Here's an example, based on [nut](https://github.com/pyrsmk/nut), [domReady](https://github.com/ded/domready), [Gator](http://craig.is/riding/gators), [morpheus](https://github.com/ded/morpheus) and [qwest](https://github.com/pyrsmk/qwest):
+Here's a full example, based on [nut](https://github.com/pyrsmk/nut), [domReady](https://github.com/ded/domready), [Gator](http://craig.is/riding/gators), [morpheus](https://github.com/ded/morpheus) and [qwest](https://github.com/pyrsmk/qwest).
 
 ```javascript
 // Set the selector engine
-
 $._selector=nut;
 
 // Set the ready function
-
 $._ready=domready;
 
 // Set an event handler
-
 $._node.on=function(event,func){
     var el=this;
     Gator(el.node).on(event,function(e){
@@ -50,11 +47,9 @@ $._node.on=function(event,func){
 };
 
 // Add animations methods
-
 $._node.animate=function(options){
     return morpheus(this.node,options);
 };
-
 $._node.fadeIn=function(duration,func){
     return morpheus(this.node,{
         duration : duration,
@@ -62,7 +57,6 @@ $._node.fadeIn=function(duration,func){
         complete : func
     });
 };
-
 $._node.fadeOut=function(duration,func){
     return morpheus(this.node,{
         duration : duration,
@@ -72,8 +66,24 @@ $._node.fadeOut=function(duration,func){
 };
 
 // Add an ajax method to the front object
-
 $.ajax=qwest;
+```
+
+```javascript
+// When the DOM is ready
+$(function(){
+    // Animate images in .foo containers
+    $('.foo').each(function(){
+        this.on('click',function(e){
+            $('img',this).fadeIn();
+        })
+    });
+    // Launch a GET ajax request
+    $.ajax.get('example.com',null,{type:'html'})
+      .success(function(response){
+          $('#info').node.innerHTML=response;
+      });
+})
 ```
 
 Starter pack
