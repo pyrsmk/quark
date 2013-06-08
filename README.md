@@ -1,7 +1,7 @@
 quark 1.0.1
 ===========
 
-quark is a small javascript library that aims let you build your own framework almost from scratch. It brings a different syntax approach than the other frameworks like the jQuery's, that seemed to me a lot more intuitive.
+Quark is a small javascript library that aims let you build your own framework almost from scratch. It brings a different syntax approach than the other frameworks like the jQuery's, that seemed to me a lot more intuitive.
 
 Basics
 ------
@@ -123,4 +123,4 @@ Here's the API:
 License
 -------
 
-quark is under the MIT license.
+Quark is under the MIT license.
