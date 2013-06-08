@@ -80,9 +80,9 @@ $(function(){
     });
     // Launch a GET ajax request
     $.ajax.get('example.com',null,{type:'html'})
-      .success(function(response){
-          $('#info').node.innerHTML=response;
-      });
+          .success(function(response){
+              $('#info').node.innerHTML=response;
+          });
 })
 ```
 
