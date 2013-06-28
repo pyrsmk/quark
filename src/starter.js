@@ -313,7 +313,13 @@ $._node.before=function(node){
         quark
 */
 $._node.after=function(node){
-    return this.next().before(node);
+    var next=this.next();
+    if(next){
+        return next.before(node);
+    }
+    else{
+        return this.parent().append(node);
+    }
 };
 
 /*
@@ -354,7 +360,13 @@ $._node.previous=function(){
         Object
 */
 $._node.next=function(){
-    return $(this.node.nextSibling);
+    var next=this.node.nextSibling;
+    if(next){
+        return $(next);
+    }
+    else{
+        return null;
+    }
 };
 
 /*
