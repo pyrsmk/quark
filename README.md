@@ -1,4 +1,4 @@
-quark 1.0.2
+quark 1.1.0
 ===========
 
 Quark is a small javascript library that aims let you build your own framework almost from scratch. It brings a different syntax approach than the other frameworks like the jQuery's, that seemed to me a lot more intuitive.
@@ -129,6 +129,7 @@ Here's the API:
 - top() : get the top offset
 - left() : get the left offset
 - clone() : clone the node (the returned node is wrapped)
+- on(event,callback,propagate) : add an event (or a list of events like `change mouseout click`); set `propagate` to true to propagate the event
 
 License
 -------

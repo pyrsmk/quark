@@ -1,7 +1,7 @@
 /*
     quark, build your own framework from scratch
 
-    Version     : 1.0.2
+    Version     : 1.1.0
     Author      : Aurélien Delogu (dev@dreamysource.fr)
     Homepage    : https://github.com/pyrsmk/quark
     License     : MIT
@@ -25,7 +25,7 @@
             if(typeof spec=='function'){
                 return $._ready(spec);
             }
-            // Return one node
+            // Get node
             var nodelist;
             if(typeof spec=='string'){
                 nodelist=getNodeList(spec,context);
@@ -33,7 +33,20 @@
             else{
                 nodelist=nodes2quark([spec]);
             }
-            return nodelist.length?nodelist[0]:null;
+            // Return the first node
+            if(nodelist.length){
+                return nodelist[0];
+            }
+            // Create a dummy node to avoid call errors
+            else{
+                var node={node:{}},
+                    _node=$._node,
+                    dummy=function(){};
+                for(var k in _node){
+                    node[k]=dummy;
+                }
+                return node;
+            }
         }
         catch(e){
             if(typeof spec=='string'){
