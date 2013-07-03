@@ -474,3 +474,33 @@ $._node.left=function(){
 $._node.clone=function(){
     return $(this.node.cloneNode(true));
 };
+
+/*
+    Add a listener
+
+    Parameters
+        string event
+        Function callback
+        boolean propagate
+
+    Return
+        quark
+*/
+$._node.on=function(event,func,propagate){
+    // Wrap callback
+    func=function(node,func,propagate){
+        return function(evt){
+            if(propagate && evt.preventDefault!==undefined) evt.preventDefault();
+            func.apply(node,arguments);
+            if(propagate) return false;
+        };
+    }(this,func,!propagate);
+    // Plug event
+    if(this.node.addEventListener){
+        this.node.addEventListener(event,func,false);
+    }
+    else{
+        this.node.attachEvent('on'+event,func);
+    }
+    return this;
+};
