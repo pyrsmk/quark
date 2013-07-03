@@ -487,20 +487,24 @@ $._node.clone=function(){
         quark
 */
 $._node.on=function(event,func,propagate){
-    // Wrap callback
-    func=function(node,func,propagate){
-        return function(evt){
-            if(propagate && evt.preventDefault!==undefined) evt.preventDefault();
-            func.apply(node,arguments);
-            if(propagate) return false;
-        };
-    }(this,func,!propagate);
-    // Plug event
-    if(this.node.addEventListener){
-        this.node.addEventListener(event,func,false);
-    }
-    else{
-        this.node.attachEvent('on'+event,func);
+    // Process each event
+    var events=event.split(' '),i,j;
+    for(i=0,j=events.length;i<j;++i){
+        // Wrap callback
+        func=function(node,func,propagate){
+            return function(evt){
+                if(propagate && evt.preventDefault!==undefined) evt.preventDefault();
+                func.apply(node,arguments);
+                if(propagate) return false;
+            };
+        }(this,func,!propagate);
+        // Plug event
+        if(this.node.addEventListener){
+            this.node.addEventListener(event,func,false);
+        }
+        else{
+            this.node.attachEvent('on'+event,func);
+        }
     }
     return this;
 };
