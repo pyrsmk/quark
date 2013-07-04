@@ -490,13 +490,15 @@ $._node.on=function(event,func,propagate){
     var func,i,j,
         events=event.split(' ');
     // Wrap callback
-    func=function(node,func,propagate){
-        return function(evt){
-            if(propagate && evt.preventDefault!==undefined) evt.preventDefault();
-            func.apply(node,arguments);
-            if(propagate) return false;
+    func=function(node,func){
+        return function(e){
+            var propagate=!!func.apply(node,[e]);
+            if(propagate && evt.preventDefault!==undefined){
+                evt.preventDefault();
+            }
+            return propagate;
         };
-    }(this,func,!propagate);
+    }(this,func);
     // Plug each event
     for(i=0,j=events.length;i<j;++i){
         if(this.node.addEventListener){
