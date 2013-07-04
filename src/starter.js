@@ -493,8 +493,8 @@ $._node.on=function(event,func,propagate){
     func=function(node,func){
         return function(e){
             var propagate=!!func.apply(node,[e]);
-            if(propagate && evt.preventDefault!==undefined){
-                evt.preventDefault();
+            if(propagate && e.preventDefault!==undefined){
+                e.preventDefault();
             }
             return propagate;
         };
