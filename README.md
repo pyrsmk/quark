@@ -129,7 +129,7 @@ Here's the API:
 - top() : get the top offset
 - left() : get the left offset
 - clone() : clone the node (the returned node is wrapped)
-- on(event,callback,propagate) : add an event (or a list of events like `change mouseout click`); please return true to propagate the event
+- on(event,callback) : add one or a list of events (like `change mouseout click`); please return true to propagate the event
 
 License
 -------
