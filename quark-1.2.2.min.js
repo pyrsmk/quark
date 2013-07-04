@@ -1,7 +1,7 @@
 /*
     quark, build your own framework from scratch
 
-    Version     : 1.2.1
+    Version     : 1.2.2
     Author      : Aurélien Delogu (dev@dreamysource.fr)
     Homepage    : https://github.com/pyrsmk/quark
     License     : MIT

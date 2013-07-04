@@ -480,20 +480,19 @@ $._node.clone=function(){
 
     Parameters
         string event
-        Function callback
-        boolean propagate
+        Function func
 
     Return
         quark
 */
-$._node.on=function(event,func,propagate){
+$._node.on=function(event,func){
     var func,i,j,
         events=event.split(' ');
     // Wrap callback
     func=function(node,func){
         return function(e){
             var propagate=!!func.apply(node,[e]);
-            if(propagate && e.preventDefault!==undefined){
+            if(!propagate && e.preventDefault!==undefined){
                 e.preventDefault();
             }
             return propagate;
