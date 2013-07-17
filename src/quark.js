@@ -1,7 +1,7 @@
 /*
-    quark, build your own framework from scratch
+    quark, build your own framework
 
-    Version     : 1.2.2
+    Version     : 1.2.4
     Author      : Aurélien Delogu (dev@dreamysource.fr)
     Homepage    : https://github.com/pyrsmk/quark
     License     : MIT
@@ -39,7 +39,7 @@
             }
             // Create a dummy node to avoid call errors
             else{
-                var node={node:{}},
+                var node={node:{},found:false},
                     _node=$._node,
                     dummy=function(){};
                 for(var k in _node){
@@ -50,9 +50,11 @@
         }
         catch(e){
             if(typeof spec=='string'){
-                throw "An error has occured with $("+spec+") selector";
+                throw "An error has occured with $("+spec+") selector: "+e;
             }
-            throw e;
+            else{
+                throw "An error has occured with a selector: "+e;
+            }
         }
     },
 
@@ -91,9 +93,11 @@
         }
         catch(e){
             if(typeof spec=='string'){
-                throw "An error has occured with $$("+spec+") selector";
+                throw "An error has occured with $$("+spec+") selector: "+e;
             }
-            throw e;
+            else{
+                throw "An error has occured with a selector: "+e;
+            }
         }
     },
 
@@ -154,10 +158,10 @@
         for(var i=0,j=nodes.length;i<j;++i){
             // Init node
             if(nodes[i].node===undefined){
-                node={node:nodes[i]};
+                node={node:nodes[i],found:true};
             }
             else{
-                node={node:nodes[i].node};
+                node={node:nodes[i].node,found:true};
             }
             // Plug composed node methods
             for(var k in _node){
