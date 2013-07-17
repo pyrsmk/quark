@@ -1,4 +1,4 @@
-quark 1.2.2
+quark 1.2.4
 ===========
 
 Quark is a small javascript library that aims let you build your own framework almost from scratch. It brings a different syntax approach than the other frameworks like the jQuery's, that seemed to me a lot more intuitive.
@@ -15,6 +15,14 @@ $$('.someclass').each(function(){
     // Access to the current node (with the starter pack)
     this.css('color','blue');
 });
+```
+
+Quark creates dummy nodes to handle calls without sending an exception when the searching node was not found. Then, if you want to verify a node existence, please use the `found` method :
+
+```javascript
+if($('table').found){
+    // <table> exists
+}
 ```
 
 Building its framework is possible with 4 internal functions:
