@@ -56,7 +56,13 @@ $._creator=function(html){
         String, quark
 */
 $._node.css=function(name,value){
-    var setStyle=function(el,name,value){
+    var translateName=function(name){
+            return name.replace(/-([a-z])/g,function(match,p1){
+                return p1.toUpperCase();
+            });
+        },
+        setStyle=function(el,name,value){
+            name=translateName(name);
             if(name=='opacity'){
                 try{el.node.filters['DXImageTransform.Microsoft.Alpha'].opacity=value*100;}
                 catch(e){
@@ -69,6 +75,7 @@ $._node.css=function(name,value){
             }
         },
         getStyle=function(el,name){
+            name=translateName(name);
             if(name=='opacity'){
                 try{return el.node.filters['DXImageTransform.Microsoft.Alpha'].opacity/100;}
                 catch(e){
