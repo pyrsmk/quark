@@ -1,7 +1,7 @@
 /*
-    quark, build your own framework
+    quark, compose your own framework
 
-    Version     : 1.2.5
+    Version     : 1.3.0
     Author      : Aurélien Delogu (dev@dreamysource.fr)
     Homepage    : https://github.com/pyrsmk/quark
     License     : MIT
@@ -205,6 +205,15 @@
     $._selector = function(){};
     $._creator  = function(){};
     $._node     = {};
+    
+    // Add wrapping function
+    $._wrap=function(func,node){
+        if(typeof func=='function'){
+            return function(){
+                func.apply(node);
+            };
+        }
+    };
 
     // Export
     this.$=$;

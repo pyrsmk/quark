@@ -1,12 +1,12 @@
-quark 1.2.5
+quark 1.3.0
 ===========
 
-Quark is a small javascript library that aims let you build your own framework almost from scratch. It brings a different syntax approach than the other frameworks like the jQuery's, that seemed to me a lot more intuitive.
+quark is a small javascript library that aims let you compose your own framework. It brings a different syntax approach than the other frameworks, like jQuery, that is a lot more intuitive and real-developer-friendly.
 
 Basics
 ------
 
-Getting nodes is assumed by `$()`, which returns one and only one node, and `$$()` which returns a list of nodes. These nodes are wrapped by quark to expose several methods (like in the starter pack, see below).
+Getting nodes is handled by `$()`, which returns one and only one node, and `$$()` which returns a list of nodes. These nodes are wrapped by quark to expose several methods (like in the starter pack with `css()`, `height()`, `addClass()`, etc..., please see below). By default, the `this` keyword inside a method handled by quark points out to a node already wrapped by quark. The example below show that functionnality.
 
 The node list returned by `$$()` is shipped with an `each` method :
 
@@ -17,7 +17,7 @@ $$('.someclass').each(function(){
 });
 ```
 
-Quark creates dummy nodes to handle calls without sending an exception when the searching node was not found. Then, if you want to verify a node existence, please use the `found` method :
+quark creates dummy nodes to handle calls without sending an exception when the searched node was not found : if the node is not found and you have a call to `$('#some_node').css('background','red')`, that line won't send an exception and your script continues as well. Then, if you want to verify a node existence, please use the `found` method :
 
 ```javascript
 if($('table').found){
@@ -25,12 +25,13 @@ if($('table').found){
 }
 ```
 
-Building its framework is possible with 4 internal functions:
+Building its framework is possible with 5 internal functions:
 
 - $._node : set some properties to this to automatically add methods to a node (inside the function, the keyword `this` points out to the wrapped node)
 - $._selector : set the CSS selector engine
 - $._creator : set the DOM node creator
 - $._ready : set the ready function
+- $._wrap : wrap a user function to have the `this` keyword pointing out to a quark node directly
 
 Finally, if you need the original node from a wrapped node, just do : `$('#someid').node`.
 
@@ -54,7 +55,7 @@ $._node.on=function(event,func){
     });
 };
 
-// Add animations methods
+// Add animation methods
 $._node.animate=function(options){
     return morpheus(this.node,options);
 };
@@ -62,14 +63,14 @@ $._node.fadeIn=function(duration,func){
     return morpheus(this.node,{
         duration : duration,
         opacity  : 1,
-        complete : func
+        complete : $._wrap(func,this)
     });
 };
 $._node.fadeOut=function(duration,func){
     return morpheus(this.node,{
         duration : duration,
         opacity  : 0,
-        complete : func
+        complete : $._wrap(func,this)
     });
 };
 
