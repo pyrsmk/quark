@@ -1,7 +1,7 @@
-quark 1.3.0
+quark 1.3.1
 ===========
 
-quark is a small javascript library that aims let you compose your own framework. It brings a different syntax approach than the other frameworks, like jQuery, that is a lot more intuitive and real-developer-friendly.
+Quark is a small javascript library that aims let you compose your own framework. It brings a different syntax approach than the other frameworks, like jQuery, that is a lot more intuitive and real-developer-friendly.
 
 Basics
 ------
@@ -17,7 +17,7 @@ $$('.someclass').each(function(){
 });
 ```
 
-quark creates dummy nodes to handle calls without sending an exception when the searched node was not found : if the node is not found and you have a call to `$('#some_node').css('background','red')`, that line won't send an exception and your script continues as well. Then, if you want to verify a node existence, please use the `found` method :
+Quark creates dummy nodes to handle calls without sending an exception when the searched node was not found : if the node is not found and you have a call to `$('#some_node').css('background','red')`, that line won't send an exception and your script continues as well. Then, if you want to verify a node existence, please use the `found` method :
 
 ```javascript
 if($('table').found){

@@ -435,9 +435,13 @@ $._node.hasClass=function(clss){
         Integer
 */
 $._node.width=function(){
-    return this.node.offsetWidth===undefined?
-           this.node.innerWidth:
-           this.node.offsetWidth;
+    if(this.node.innerWidth!==undefined){
+        return this.node.innerWidth;
+    }
+    else if(this.node.nodeType==9){
+        return this.node.body.clientWidth;
+    }
+    return this.node.offsetWidth;
 };
 
 /*
@@ -447,9 +451,13 @@ $._node.width=function(){
         Integer
 */
 $._node.height=function(){
-    return this.node.offsetHeight===undefined?
-           this.node.innerHeight:
-           this.node.offsetHeight;
+    if(this.node.innerHeight!==undefined){
+        return this.node.innerHeight;
+    }
+    else if(this.node.nodeType==9){
+        return this.node.body.clientHeight;
+    }
+    return this.node.offsetHeight;
 };
 
 /*
