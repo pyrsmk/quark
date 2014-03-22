@@ -122,7 +122,7 @@ $._node.html=function(html){
     }
     else{
         if(this.node.nodeName=='IFRAME'){
-            this.node.src='data:text/html;charset=utf-8,'+escape(html);
+            this.node.src='data:text/html;charset=utf-8,'+encodeURI(html);
         }
         else{
             this.node.innerHTML=html;
@@ -196,10 +196,11 @@ $._node.attr=function(name,value){
         Array, String, quark
 */
 $._node.data=function(name,value){
+    var i;
     if(name===undefined){
-        var values={}
+        var values={},
             attributes=this.node.attributes;
-        for(var i in attributes){
+        for(i in attributes){
             if(i.test(/^data-/)){
                 values[i.substring(5)]=attributes[i];
             }
@@ -207,7 +208,7 @@ $._node.data=function(name,value){
         return values;
     }
     else if(typeof name=='object'){
-        for(var i in name){
+        for(i in name){
             this.attr('data-'+i,name[i]);
         }
     }
@@ -501,7 +502,7 @@ $._node.clone=function(){
         quark
 */
 $._node.on=function(event,func){
-    var func,i,j,
+    var i,j,
         events=event.split(' ');
     // Wrap callback
     func=function(node,func){
