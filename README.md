@@ -1,6 +1,8 @@
 quark 1.3.1
 ===========
 
+__Quark is now unmaintained. It was a great experience to me but now I prefer to switch to enderjs. In any case, for those who would care about, I will export the 'starter' module for enderjs, stay in touch ;)__
+
 Quark is a small javascript library that aims let you compose your own framework. It brings a different syntax approach than the other frameworks, like jQuery, that is a lot more intuitive and real-developer-friendly.
 
 Basics
