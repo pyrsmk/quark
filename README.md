@@ -1,7 +1,7 @@
 quark 1.3.1
 ===========
 
-__Quark is now unmaintained. It was a great experience to me but now I prefer to switch to [enderjs](https://github.com/ender-js/Ender). If you want to continue this project, ask me, I would be honored to give you the repo. In any case, for those who would care about, I will export the 'starter' module for [enderjs](https://github.com/ender-js/Ender), stay in touch ;)__
+__Quark is now unmaintained. It was a great experience to me but now I prefer to switch to [ender](https://github.com/ender-js/Ender). If you want to continue this project, ask me, I would be honored to give you the repo. In any case, for those who would care about, I've exported the 'starter' module for ender at [ender-quarky](https://github.com/pyrsmk/ender-quarky) ;)__
 
 Quark is a small javascript library that aims let you compose your own framework. It brings a different syntax approach than the other frameworks, like jQuery, that is a lot more intuitive and real-developer-friendly.
 
