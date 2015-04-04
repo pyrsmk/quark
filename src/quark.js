@@ -1,9 +1,4 @@
-/*
-	quark, compose your own framework
-
-	Author
-		Aurélien Delogu (dev@dreamysource.fr)
-*/
+/*! quark 1.3.1 (https://github.com/pyrsmk/quark) */
 
 (function(){
 
