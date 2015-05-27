@@ -1,148 +1,178 @@
-quark 1.3.1
+quark 2.0.0
 ===========
 
-__Quark is now unmaintained. It was a great experience to me but now I prefer to switch to [ender](https://github.com/ender-js/Ender). If you want to continue this project, ask me, I would be honored to give you the repo. In any case, for those who would care about, I've exported the 'starter' module for ender at [ender-quarky](https://github.com/pyrsmk/ender-quarky) ;)__
+Quark is a small javascript library that aims to let you compose your own framework from scratch. It brings a different syntax approach than the other frameworks, like jQuery, that is a lot more intuitive and browser-friendly.
 
-Quark is a small javascript library that aims let you compose your own framework. It brings a different syntax approach than the other frameworks, like jQuery, that is a lot more intuitive and real-developer-friendly.
+Quark is an alternative to [ender](http://enderjs.com) without all the building process and a lot of overhead.
+
+Installation
+------------
+
+Quark supports AMD/CommonJS and fits well with Browserify/Webpack.
+
+```
+jam install pyrsmk-quark
+bower install pyrsmk-quark
+npm install pyrsmk-quark --save-dev
+```
+
+You can pick up the minified source file directly from github too ;)
 
 Basics
 ------
 
-Getting nodes is handled by `$()`, which returns one and only one node, and `$$()` which returns a list of nodes. These nodes are wrapped by quark to expose several methods (like in the starter pack with `css()`, `height()`, `addClass()`, etc..., please see below). By default, the `this` keyword inside a method handled by quark points out to a node already wrapped by quark. The example below show that functionnality.
+For all examples, we're using this configuration :
 
-The node list returned by `$$()` is shipped with an `each` method :
+```js
+var quark = require('pyrsmk-quark');
 
-```javascript
-$$('.someclass').each(function(){
-    // Access to the current node (with the starter pack)
-    this.css('color','blue');
+window.$ = quark.$;
+window.$$ = quark.$$;
+```
+
+Because quark is modular, the `$` and `$$` variables aren't set globally, but as you can see you can define them yourself easily.
+
+So! Let's begin!
+
+Here's how we can retrieve nodes :
+
+```js
+// Return one and only one node
+$('.someclass');
+
+// Return a list of nodes
+$$('.someclass');
+
+// Access to the real node; it's like $('#someid')[0] in jQuery
+$('#someid').node;
+
+// Create a node
+$('<ul>');
+```
+
+To apply some tasks to a list of nodes, you can call, for example, the `css()` method and all nodes in the list will be affected, like with jQuery.
+
+There's also a `forEach()` method if you want to apply some specific tasks to, let's say, a node :
+
+```js
+$$('.someclass').forEach(function(i) {
+	// Display the index of the current node
+	console.log('node : '+i);
+	// Modify the text property of each node
+	// Note that the 'this' keyword refers to the same node as in the list (yeah, the wrapped one with all the methods and shit)
+	this.node.text = 'test';
 });
 ```
 
-Quark creates dummy nodes to handle calls without sending an exception when the searched node was not found : if the node is not found and you have a call to `$('#some_node').css('background','red')`, that line won't send an exception and your script continues as well. Then, if you want to verify a node existence, please use the `found` method :
+It can happen that your selector does not find anything on purpose (or not, but that's your problem). Per example, you have a blog post and want to apply some things on the comments. Those comments can not exist at all but you don't want that your script crashes or make many tests to verify if those comments are here or not. Quark handles that for you automatically by creating dummy nodes. Then, any call to a node method (like `css()`) won't blow up anything.
 
-```javascript
-if($('table').found){
-    // <table> exists
+```js
+// No comment exists? Just don't care.
+$$('.comment').css('color','red');
+```
+
+If needed, you can verify if the nodes have been found like this :
+
+```js
+// A node has been found
+if($('table').node) {
+    // some tasks
+}
+// Several nodes have been found
+if($$('.comment').length) {
+    // some tasks
 }
 ```
 
-Building its framework is possible with 5 internal functions:
+Last note. When calling a method on `$$()`, results can be returned. Since the method will be called on all nodes registered on `$$()`, only the first result will be returned (as many frameworks indeed). But if those results are quark nodes then all of them will be concatenated into a single list. It's really useful with `findOne()` and `findAll()` per example.
 
-- $._node : set some properties to this to automatically add methods to a node (inside the function, the keyword `this` points out to the wrapped node)
-- $._selector : set the CSS selector engine
-- $._creator : set the DOM node creator
-- $._ready : set the ready function
-- $._wrap : wrap a user function to have the `this` keyword pointing out to a quark node directly
+Let's dig in!
+-------------
 
-Finally, if you need the original node from a wrapped node, just do : `$('#someid').node`.
+In the last chapter, we have seen how quark is working but, at this time, we don't have any DOM methods, specific selector engine or readiness library inside it. Quark is delivered with a very concise support for recent browsers only. Here's the API to define your own libraries/methods inside quark :
+
+- $._whenReady(function) : takes a function that verifies if the DOM is ready or not
+- $._selectNode(selector) : takes a function to select one node
+- $._selectNodes(selector) : takes a function to select several nodes
+- $._createNodes(html) : takes a function to create one or several nodes
+- $._nodeMethods : is an object and accepts new methods that will be appended to nodes by quark
 
 Example
 -------
 
-Here's a full example, based on [nut](https://github.com/pyrsmk/nut), [domReady](https://github.com/ded/domready), [Gator](http://craig.is/riding/gators), [morpheus](https://github.com/ded/morpheus) and [qwest](https://github.com/pyrsmk/qwest).
+Here's a full example, based on [quarky](https://github.com/pyrsmk/quark-quarky) (already configured to append DOM methods to quark), [nut](https://github.com/pyrsmk/nut), [domReady](https://github.com/ded/domready), [morpheus](https://github.com/ded/morpheus) and [qwest](https://github.com/pyrsmk/qwest). First, we configure our framework :
 
 ```javascript
+var $ = require('pyrsmk-quark').$,
+	$$ = require('pyrsmk-quark').$$,
+	nut = require('nut'),
+	domready = require('domready'),
+	morpheus = require('morpheus'),
+	qwest = require('qwest');
+
 // Set the selector engine
-$._selector=nut;
+$._selectNode = function(selector) {
+	return nut(selector)[0];
+};
+$._selectNodes = nut;
 
 // Set the ready function
-$._ready=domready;
-
-// Replace the event handler (from the starter pack)
-$._node.on=function(event,func){
-    var el=this;
-    Gator(el.node).on(event,function(e){
-        return !!func.apply(el,[e]);
-    });
-};
+$._whenReady = domready;
 
 // Add animation methods
-$._node.animate=function(options){
-    return morpheus(this.node,options);
+$._nodeMethods.animate = function(options) {
+    return morpheus(this.node, options);
 };
-$._node.fadeIn=function(duration,func){
-    return morpheus(this.node,{
+$._nodeMethods.fadeIn = function(duration, func) {
+	var node = this;
+    return morpheus(this.node, {
         duration : duration,
         opacity  : 1,
-        complete : $._wrap(func,this)
+        complete : function() {
+			func.call(node);
+		}
     });
 };
-$._node.fadeOut=function(duration,func){
-    return morpheus(this.node,{
+$._nodeMethods.fadeOut = function(duration, func) {
+	var node = this;
+    return morpheus(this.node, {
         duration : duration,
         opacity  : 0,
-        complete : $._wrap(func,this)
+        complete : function() {
+			func.call(node);
+		}
     });
 };
 
 // Add an ajax method to the front object
-$.ajax=qwest;
+$.ajax = qwest;
 ```
+
+Now that the framework is set, we can use it :
 
 ```javascript
 // When the DOM is ready
-$(function(){
+$(function() {
     // Animate images in .foo containers
-    $('.foo').each(function(){
-        this.on('click',function(e){
-            $('img',this).fadeIn();
-        })
+    $('.foo').forEach(function() {
+        this.on('click', function() {
+            this.findAll('img').fadeIn();
+        });
     });
     // Launch a GET ajax request
-    $.ajax.get('example.com',null,{type:'html'})
-          .success(function(response){
-              $('#info').node.innerHTML=response;
+    $.ajax.get('example.com')
+          .then(function(response) {
+              $('#info').html(response);
           });
 })
 ```
 
-Starter pack
-------------
+Write extensions
+----------------
 
-Quark is delivered with a starter version which adds many useful DOM functions and features:
-
-- `$._creator` is already set
-- all returned nodes are wrapped as well
-- methods are chainable
-
-Here's the API:
-
-- css(name) : get a CSS property
-- css(name,value) : set a CSS property
-- css(object) : set a CSS property list
-- html() : get HTML contents
-- html(string) : set HTML contents
-- text() : get text contents
-- text(string) : set text contents
-- attr(name) : get an attribute
-- attr(name,value) : set an attribute
-- data() : get the `data-foo` attribute list
-- data(name) : get a data attribute
-- data(name,value) : set a data attribute
-- data(object) : set a data attribute list
-- val() : get the value
-- val(string) : set the value
-- append(node) : append a node to the container
-- prepend(node) : prepend a node to the container
-- before(node) : add a node before it
-- after(node) : add a node after it
-- remove() : remove the node
-- parent() : get the parent node
-- previous() : get the previous node
-- next() : get the next node
-- children() : get node's children (return a node list via `$$`)
-- addClass(string) : add a class
-- removeClass(string) : remove a class
-- hasClass(string) : verify if the class exist for that node
-- width() : get the width
-- height() : get the height
-- top() : get the top offset
-- left() : get the left offset
-- clone() : clone the node (the returned node is wrapped)
-- on(event,callback) : add one or a list of events (like `change mouseout click`); please return true to propagate the event
+Writing "extensions" is simple, you just have to write code like the example above and release your library on NPM with a `quark` tag. Please note that your library must be valid as a module so it can be required and browserified.
 
 License
 -------
 
-Quark is under the [MIT license](http://dreamysource.mit-license.org).
+Quark is published under the [MIT license](http://dreamysource.mit-license.org).

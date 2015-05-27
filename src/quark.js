@@ -1,215 +1,212 @@
-/*! quark 1.3.1 (https://github.com/pyrsmk/quark) */
+/*! quark 2.0.0 (https://github.com/pyrsmk/quark) */
 
-(function(){
+;(function(context, name, definition) {
+	if(typeof module != 'undefined' && module.exports) {
+		module.exports = definition;
+	}
+	else if(typeof define == 'function' && define.amd) {
+		define(definition);
+	}
+	else{
+		context[name] = definition;
+	}
+}(this, 'quark', function(elements) {
 
 	/*
 		Retrieve only one node
 
 		Parameters
-			String, Node spec
-			Node context
+			String, Object, Function spec
 
 		Return
 			Object
 	*/
-	var $=function(spec,context){
-		try{
-			// Readiness
-			if(typeof spec=='function'){
-				return $._ready(spec);
+	var $ = function(spec) {
+		var quark;
+		// Readiness
+		if(typeof spec == 'function') {
+			return $._whenReady(spec);
+		}
+		else if(typeof spec == 'string') {
+			// Create new node
+			if(/</.test(spec)) {
+				quark = node2quark($._createNodes(spec)[0]);
 			}
 			// Get node
-			var nodelist;
-			if(typeof spec=='string'){
-				nodelist=getNodeList(spec,context);
-			}
-			else{
-				nodelist=nodes2quark([spec]);
-			}
-			// Return the first node
-			if(nodelist.length){
-				return nodelist[0];
-			}
-			// Create a dummy node to avoid call errors
-			else{
-				var node={node:{},found:false},
-					_node=$._node,
-					dummy=function(){};
-				for(var k in _node){
-					node[k]=dummy;
-				}
-				return node;
+			else {
+				quark = node2quark($._selectNode(spec));
 			}
 		}
-		catch(e){
-			if(typeof spec=='string'){
-				throw "An error has occured with $("+spec+") selector: "+e;
-			}
-			else{
-				throw "An error has occured with a selector: "+e;
-			}
+		else {
+			quark = node2quark(spec);
 		}
+		// Convert and return node
+		return quark;
 	},
 
 	/*
 		Retrieve a list of nodes
 
 		Parameters
-			String, Node spec
-			Node context
+			String, Array spec
 
 		Return
 			Object
 	*/
-	$$=function(spec,context){
-		try{
-			// Get node list
-			var nodelist;
-			if(typeof spec=='string'){
-				nodelist=getNodeList(spec,context);
+	$$ = function(spec) {
+		var quarks = [],
+			i, j;
+		quarks.quarked = true;
+		if(typeof spec == 'string') {
+			// Create new nodes
+			if(/</.test(spec)) {
+				spec = $._createNodes(spec);
 			}
+			// Get nodes
 			else{
-				nodelist=nodes2quark(spec);
+				spec = $._selectNodes(spec);
 			}
-			// Add 'each' magic method
-			nodelist.each=function(nodes){
-				return function(func,i){
-					i=-1;
-					while(nodes[++i]){
-						func.apply(nodes[i],[i]);
+		}
+		// Convert nodes
+		if((typeof spec == 'object') && ('length' in spec)) {
+			for(i = 0, j = spec.length; i < j; ++i) {
+				quarks.push(node2quark(spec[i]));
+			}
+		}
+		// Add global methods
+		for(i in $._nodeMethods) {
+			quarks[i] = function(quarks, method) {
+				return function() {
+					var results = [], i, j, k, l;
+					for(i = 0, j = quarks.length; i < j; ++i) {
+						results.push(method.apply(quarks[i], arguments));
 					}
-					return nodes[0];
+					if(results.length) {
+						// Quark nodes detected, return them
+						if((typeof results[0] == 'object') && ('length' in results[0])) {
+							if('quarked' in results[0][0]) {
+								var results2 = [];
+								for(i = 0, j = results.length; i < j; ++i) {
+									for(k = 0, l = results[i].length; k < l; ++k) {
+										results2.push(results[i][k]);
+									}
+								}
+								return $$(results2);
+							}
+						}
+						else if((typeof results[0] == 'object') && ('quarked' in results[0])) {
+							var results2 = [];
+							for(i = 0, j = results.length; i < j; ++i) {
+								results2.push(results[i]);
+							}
+							return $$(results2);
+						}
+						// Return the first result
+						return results[0];
+					}
+					// No returned value, return $$()
+					return quarks;
 				};
-			}(nodelist);
-			// Return node list
-			return nodelist;
+			}(quarks, $._nodeMethods[i]);
 		}
-		catch(e){
-			if(typeof spec=='string'){
-				throw "An error has occured with $$("+spec+") selector: "+e;
-			}
-			else{
-				throw "An error has occured with a selector: "+e;
-			}
-		}
-	},
-
-	/*
-		Get a node list
-
-		Parameters
-			String, Node spec
-			Node context
-
-		Return
-			Array
-	*/
-	getNodeList=function(spec,context){
-		var a,nodelist=[];
-		// Create new elements
-		if(/</.test(spec)){
-			if(a=$._creator(spec)){
-				nodelist=[a];
-			}
-			else{
-				a=document.createElement('div');
-				a.innerHTML=spec;
-				nodelist=[a=a.firstChild];
-				while(a=a.nextSibling){
-					nodelist.push(a);
+		// Add the 'forEach' method
+		quarks.forEach = function(quarks) {
+			return function(func) {
+				var i = -1;
+				while(quarks[++i]) {
+					func.apply(quarks[i], [i]);
 				}
-			}
-			nodelist=nodes2quark(nodelist);
-		}
-		// Get a node list
-		else{
-			nodelist=nodes2quark(
-				$._selector(
-					quark2nodes(spec),
-					quark2nodes(context)
-				)
-			);
-		}
-		return nodelist;
+				return quarks;
+			};
+		}(quarks);
+		// Return nodes
+		return quarks;
 	},
 
 	/*
-		Convert regular nodes to quark ones
+		Convert regular node to quark
 
 		Parameters
-			Array nodes
+			Object node
 
 		Return
-			Array
+			Object
 	*/
-	nodes2quark=function(nodes){
-		// Prepare
-		var node,
-			_node=$._node,
-			nodelist=[];
-		// Compose nodes
-		for(var i=0,j=nodes.length;i<j;++i){
-			// Init node
-			if(nodes[i].node===undefined){
-				node={node:nodes[i],found:true};
+	node2quark = function(node) {
+		var quark = {node: null, quarked: true}, i;
+		// Create a dummy node
+		if((typeof node != 'object') || (node === null)) {
+			var func = function(){};
+			for(i in $._nodeMethods){
+				quark[i] = func;
 			}
-			else{
-				node={node:nodes[i].node,found:true};
-			}
-			// Plug composed node methods
-			for(var k in _node){
-				node[k]=function(node,method){
-					return function(){
-						return method.apply(node,arguments);
+		}
+		// Create quark node
+		else if(!('quarked' in node)) {
+			quark.node = node;
+			for(i in $._nodeMethods) {
+				quark[i] = function(quark, method) {
+					return function() {
+						return method.apply(quark, arguments);
 					};
-				}(node,_node[k]);
+				}(quark, $._nodeMethods[i]);
 			}
-			// Add node
+		}
+		else {
+			quark = node;
+		}
+		return quark;
+	};
+
+	// Define default methods
+
+	$._whenReady = function(func) {
+		document.addEventListener('DOMContentLoaded', func);
+	};
+
+	$._selectNode = function(selector) {
+		return document.querySelector(selector);
+	};
+
+	$._selectNodes = function(selector) {
+		return document.querySelectorAll(selector);
+	};
+
+	$._createNodes = function(html) {
+		var node = document.createElement('div'),
+			nodelist = [];
+		node.innerHTML = html;
+		node = node.firstChild;
+		nodelist.push(node);
+		while(node = node.nextSibling) {
 			nodelist.push(node);
 		}
 		return nodelist;
-	},
-
-	/*
-		Convert quark nodes to regular ones
-
-		Parameters
-			mixed nodes
-
-		Return
-			mixed
-	*/
-	quark2nodes=function(nodes){
-		if(typeof nodes=='object'){
-			if(nodes.pop){
-				for(var i=0,j=nodes.length;i<j;++i){
-					nodes[i]=quark2nodes(nodes[i]);
-				}
-			}
-			else if(nodes.node){
-				nodes=nodes.node;
-			}
-		}
-		return nodes;
 	};
 
-	// Define internal vars
-	$._ready    = function(){};
-	$._selector = function(){};
-	$._creator  = function(){};
-	$._node     = {};
-	
-	// Add wrapping function
-	$._wrap=function(func,node){
-		if(typeof func=='function'){
-			return function(){
-				func.apply(node);
-			};
+	$._nodeMethods = {
+		findOne: function(selector) {
+			if('querySelector' in this.node) {
+				return $(this.node.querySelector(selector));
+			}
+			else {
+				return $();
+			}
+		},
+		findAll: function(selector) {
+			if('querySelectorAll' in this.node) {
+				return $$(this.node.querySelectorAll(selector));
+			}
+			else {
+				return $$([]);
+			}
 		}
 	};
 
 	// Export
-	this.$=$;
-	this.$$=$$;
+	return {
+		$ : $,
+		$$ : $$
+	};
 
-})();
+}()));
