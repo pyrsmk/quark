@@ -1,10 +1,13 @@
-var gulp = require('gulp'),
+var fs = require('fs'),
+	gulp = require('gulp'),
 	jshint = require('gulp-jshint'),
 	uglify = require('gulp-uglify'),
 	replace = require('gulp-replace'),
 	rename = require('gulp-rename'),
 	merge = require('merge2'),
 	shell = require('gulp-shell');
+
+var version = fs.readFileSync('src/quark.js', {encoding:'utf8'}).match(/^\/\*\! \w+ ([0-9.]+)/)[1];
 
 gulp.task('version', function() {
 	var streams = merge();
@@ -23,11 +26,14 @@ gulp.task('version', function() {
 
 gulp.task('build', function() {
 	return gulp.src( './src/*.js' )
-		.pipe( jshint() )
+		.pipe( jshint({
+			loopfunc: true,
+			boss: true
+		}) )
 		.pipe( jshint.reporter('jshint-stylish') )
 		.pipe( uglify() )
 		.pipe( rename({suffix:'.min'}) )
-		.pipe( gulp.src('.') );
+		.pipe( gulp.dest('.') );
 });
 
 gulp.task('publish', shell.task([

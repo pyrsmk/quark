@@ -77,7 +77,7 @@
 		for(i in $._nodeMethods) {
 			quarks[i] = function(quarks, method) {
 				return function() {
-					var results = [], i, j, k, l;
+					var results = [], results2, i, j, k, l;
 					for(i = 0, j = quarks.length; i < j; ++i) {
 						results.push(method.apply(quarks[i], arguments));
 					}
@@ -85,7 +85,7 @@
 						// Quark nodes detected, return them
 						if((typeof results[0] == 'object') && ('length' in results[0])) {
 							if('quarked' in results[0][0]) {
-								var results2 = [];
+								results2 = [];
 								for(i = 0, j = results.length; i < j; ++i) {
 									for(k = 0, l = results[i].length; k < l; ++k) {
 										results2.push(results[i][k]);
@@ -95,7 +95,7 @@
 							}
 						}
 						else if((typeof results[0] == 'object') && ('quarked' in results[0])) {
-							var results2 = [];
+							results2 = [];
 							for(i = 0, j = results.length; i < j; ++i) {
 								results2.push(results[i]);
 							}
