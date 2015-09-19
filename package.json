@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/pyrsmk/quark.git"
   },
-  "main": "src/quark.js",
+  "main": "quark.min.js",
   "keywords": [
     "micro",
     "framework",
