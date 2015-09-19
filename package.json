@@ -10,7 +10,8 @@
   "main": "src/quark.js",
   "keywords": [
     "micro",
-    "framework"
+    "framework",
+    "quark"
   ],
   "license": "MIT",
   "bugs": {

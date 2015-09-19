@@ -170,7 +170,7 @@ $(function() {
 Write extensions
 ----------------
 
-Writing "extensions" is simple, you just have to write code like the example above and release your library on NPM with a `quark` tag. Please note that your library must be valid as a module so it can be required and browserified.
+Writing "extensions" is simple, you just have to write code like the example above and release your library on NPM with a `quark` tag (so it can be easily found). Please note that your library must be valid as a module so it can be required and browserified.
 
 License
 -------
