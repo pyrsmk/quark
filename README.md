@@ -1,114 +1,143 @@
-quark 2.0.0
+quark 2.1.0
 ===========
 
-Quark is a small javascript library that aims to let you compose your own framework from scratch. It brings a different syntax approach than the other frameworks, like jQuery, that is a lot more intuitive and browser-friendly.
+Quark is a small javascript library that aims to let you compose your own framework from scratch. It brings a different syntax than the other frameworks which is a lot more intuitive and browser-friendly.
 
-Quark is an alternative to [ender](http://enderjs.com) without all the building process and a lot of overhead.
+Quark is an alternative to [Ender](http://enderjs.com) without all the building process and a lot of overhead.
 
 Installation
 ------------
 
-Quark supports AMD/CommonJS and fits well with Browserify/Webpack.
-
 ```
-jam install pyrsmk-quark
+npm install pyrsmk-quark
 bower install pyrsmk-quark
-npm install pyrsmk-quark --save-dev
+jam install pyrsmk-quark
 ```
 
-You can pick up the minified source file directly from github too ;)
+As Ender, you'll need to install third-party libraries to add ajax, animations, etc... But it has a basic support for readiness, node selection and creation.
+
+Quick examples
+--------------
+
+```js
+var $ = quark.$,
+	$$ = quark.$$;
+```
+
+```js
+$('.foo .bar').data('state', 'ok');
+```
+
+```js
+$$('.comments').css('background', 'red');
+```
+
+Note that `data()` and `css()` methods are available by installing [quarky](https://github.com/pyrsmk/quarky).
 
 Basics
 ------
 
-For all examples, we're using this configuration :
+Unlike jQuery-like libraries, each node is wrapped by quark and all methods (like `css()`) are available. Even into the methods themselves (like `on()` in quarky). But you can access to the base node with :
 
 ```js
-var quark = require('pyrsmk-quark');
-
-window.$ = quark.$;
-window.$$ = quark.$$;
+var node = $('.foo').node;
 ```
 
-Because quark is modular, the `$` and `$$` variables aren't set globally, but as you can see you can define them yourself easily.
-
-So! Let's begin!
-
-Here's how we can retrieve nodes :
+If you need to verify if a node has already been wrapped or not, you can test for :
 
 ```js
-// Return one and only one node
-$('.someclass');
-
-// Return a list of nodes
-$$('.someclass');
-
-// Access to the real node; it's like $('#someid')[0] in jQuery
-$('#someid').node;
-
-// Create a node
-$('<ul>');
+if('quarked' in somenode) {
+	// the node is wrapped
+}
 ```
 
-To apply some tasks to a list of nodes, you can call, for example, the `css()` method and all nodes in the list will be affected, like with jQuery.
+Readiness
+---------
 
-There's also a `forEach()` method if you want to apply some specific tasks to, let's say, a node :
+Quark implements a basic ready function that should work in most browsers :
 
 ```js
-$$('.someclass').forEach(function(i) {
-	// Display the index of the current node
-	console.log('node : '+i);
-	// Modify the text property of each node
-	// Note that the 'this' keyword refers to the same node as in the list (yeah, the wrapped one with all the methods and shit)
-	this.node.text = 'test';
+$(function() {
+	// Run some tasks when the DOM is ready
 });
 ```
 
-It can happen that your selector does not find anything on purpose (or not, but that's your problem). Per example, you have a blog post and want to apply some things on the comments. Those comments can not exist at all but you don't want that your script crashes or make many tests to verify if those comments are here or not. Quark handles that for you automatically by creating dummy nodes. Then, any call to a node method (like `css()`) won't blow up anything.
+Selecting nodes
+---------------
+
+`$()` will return one wrapped node.
+
+`$$()` will return a list of wrapped. A `forEach()` method has been added to this node list to iterate over those nodes.
 
 ```js
-// No comment exists? Just don't care.
-$$('.comment').css('color','red');
+$$('.comments').forEach(function(index) {
+	// index is the index of the current node in the list
+	console.log(index);
+	// the this keyword points to the current node
+	this.css('background', 'red');
+});
 ```
 
-If needed, you can verify if the nodes have been found like this :
+Creating nodes
+--------------
+
+You can create on node by calling `$()`. The returned node is wrapped as well :
 
 ```js
-// A node has been found
-if($('table').node) {
-    // some tasks
-}
-// Several nodes have been found
-if($$('.comment').length) {
-    // some tasks
-}
+$('body').append($('<div>'));
 ```
 
-Last note. When calling a method on `$$()`, results can be returned. Since the method will be called on all nodes registered on `$$()`, only the first result will be returned (as many frameworks indeed). But if those results are quark nodes then all of them will be concatenated into a single list. It's really useful with `findOne()` and `findAll()` per example.
+You can create several nodes too :
 
-Let's dig in!
--------------
+```js
+var nodes = $$('<div>1</div><div>2</div><div>3</div>');
 
-In the last chapter, we have seen how quark is working but, at this time, we don't have any DOM methods, specific selector engine or readiness library inside it. Quark is delivered with a very concise support for recent browsers only. Here's the API to define your own libraries/methods inside quark :
+nodes.css('display', 'inline');
+
+$('body').append(nodes);
+```
+
+Calling node methods
+--------------------
+
+Quark is shipped with two base methods : `findOne()` and `findAll()`.
+
+```js
+// Find only one .bar node in .foo nodes
+$('.foo').findOne('.bar');
+// Find all .bar nodes in .foo nodes
+$('.foo').findAll('.bar');
+```
+
+Calling node methods on `$$()` will apply the method to each node, as expected. But note that if the method is returning a value then `$$()` will return an array of all returned values. Per example :
+
+```js
+// Return an array of all .bar nodes found in each .foo node
+$$('.foo').findAll('.bar');
+```
+
+Writing extensions
+------------------
+
+Writing extensions is simple, you just have to write code like the example below and release your library on NPM with a `quark` tag (so it can easily be found).
+
+Here's the API :
 
 - $._whenReady(function) : takes a function that verifies if the DOM is ready or not
 - $._selectNode(selector) : takes a function to select one node
 - $._selectNodes(selector) : takes a function to select several nodes
-- $._createNodes(html) : takes a function to create one or several nodes
+- $._createNode(html) : takes a function to create one node
+- $._createNodes(html) : takes a function to create several nodes
 - $._nodeMethods : is an object and accepts new methods that will be appended to nodes by quark
 
 Example
 -------
 
-Here's a full example, based on [quarky](https://github.com/pyrsmk/quark-quarky) (already configured to append DOM methods to quark), [nut](https://github.com/pyrsmk/nut), [domReady](https://github.com/ded/domready), [morpheus](https://github.com/ded/morpheus) and [qwest](https://github.com/pyrsmk/qwest). First, we configure our framework :
+Here's a full example, based on [quarky](https://github.com/pyrsmk/quarky), [nut](https://github.com/pyrsmk/nut), [domReady](https://github.com/ded/domready), [morpheus](https://github.com/ded/morpheus) and [qwest](https://github.com/pyrsmk/qwest). First, we configure our framework :
 
 ```javascript
-var $ = require('pyrsmk-quark').$,
-	$$ = require('pyrsmk-quark').$$,
-	nut = require('nut'),
-	domready = require('domready'),
-	morpheus = require('morpheus'),
-	qwest = require('qwest');
+var $ = quark.$,
+	$$ = quark.$$;
 
 // Set the selector engine
 $._selectNode = function(selector) {
@@ -154,23 +183,16 @@ Now that the framework is set, we can use it :
 // When the DOM is ready
 $(function() {
     // Animate images in .foo containers
-    $('.foo').forEach(function() {
-        this.on('click', function() {
-            this.findAll('img').fadeIn();
-        });
-    });
-    // Launch a GET ajax request
+	this.on('click', function() {
+		this.findAll('img').fadeIn();
+	});
+    // Run a GET ajax request
     $.ajax.get('example.com')
-          .then(function(response) {
+          .then(function(xhr, response) {
               $('#info').html(response);
           });
-})
+});
 ```
-
-Write extensions
-----------------
-
-Writing "extensions" is simple, you just have to write code like the example above and release your library on NPM with a `quark` tag (so it can be easily found). Please note that your library must be valid as a module so it can be required and browserified.
 
 License
 -------
