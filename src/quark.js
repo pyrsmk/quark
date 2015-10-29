@@ -25,7 +25,7 @@ var $ = function(spec) {
 			quark = node2quark($._selectNode(spec));
 		}
 	}
-	else if (typeof spec == 'object' && spec !== null && 'length' in spec) {
+	else if (typeof spec == 'object' && spec !== null && spec !== window && 'length' in spec) {
 		quark = node2quark(spec[0]);
 	}
 	else {
