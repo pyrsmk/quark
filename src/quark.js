@@ -1,4 +1,4 @@
-/*! quark 2.1.1 (https://github.com/pyrsmk/quark) */
+/*! quark 2.1.2 (https://github.com/pyrsmk/quark) */
 
 /*
 	Retrieve only one node
@@ -18,7 +18,7 @@ var $ = function(spec) {
 	else if(typeof spec == 'string') {
 		// Create new node
 		if(/</.test(spec)) {
-			quark = node2quark($._createNodes(spec)[0]);
+			quark = node2quark($._createNode(spec)[0]);
 		}
 		// Get node
 		else {
