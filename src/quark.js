@@ -18,7 +18,7 @@ var $ = function(spec) {
 	else if(typeof spec == 'string') {
 		// Create new node
 		if(/</.test(spec)) {
-			quark = node2quark($._createNode(spec)[0]);
+			quark = node2quark($._createNode(spec));
 		}
 		// Get node
 		else {
@@ -60,15 +60,18 @@ $$ = function(spec, raw) {
 			spec = $._selectNodes(spec);
 		}
 	}
-	// Convert nodes
-	if(typeof spec == 'object' && spec !== null && 'length' in spec) {
-		for(i = 0, j = spec.length; i < j; ++i) {
-			quarks.push(!raw ? node2quark(spec[i]) : spec[i]);
-		}
+	// Normalize
+	if(typeof spec != 'object' || spec === null || spec === window || !('length' in spec)) {
+		spec = [spec];
 	}
-	// Quarked node
-	else if (typeof spec == 'object' && 'quarked' in spec) {
-		quarks.push(spec);
+	// Convert nodes
+	for(i = 0, j = spec.length; i < j; ++i) {
+		if(!raw && (typeof spec != 'object' || !('quarked' in spec))) {
+			quarks.push(node2quark(spec[i]));
+		}
+		else {
+			quarks.push(spec[i]);
+		}
 	}
 	// Add global methods
 	for(i in $._nodeMethods) {
