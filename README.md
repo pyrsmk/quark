@@ -1,4 +1,4 @@
-quark 2.1.0
+quark 2.1.1
 ===========
 
 Quark is a small javascript library that aims to let you compose your own framework from scratch. It brings a different syntax than the other frameworks which is a lot more intuitive and browser-friendly.
@@ -32,7 +32,7 @@ $('.foo .bar').data('state', 'ok');
 $$('.comments').css('background', 'red');
 ```
 
-Note that `data()` and `css()` methods are available by installing [quarky](https://github.com/pyrsmk/quarky).
+Note that `data()` and `css()` methods are available by installing [quarky](https://github.com/pyrsmk/quarky) (that we're strongly to advise you to install).
 
 Basics
 ------
@@ -49,6 +49,12 @@ If you need to verify if a node has already been wrapped or not, you can test fo
 if('quarked' in somenode) {
 	// the node is wrapped
 }
+```
+
+Quark has a heavy fault tolerance when searched nodes do not exist. Imagine, you have some blog comments that are not there for any reason, then that line won't crash anything :
+
+```js
+$('.comments').css('color', 'green');
 ```
 
 Readiness

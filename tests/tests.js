@@ -28,17 +28,21 @@ QUnit.test('Create several nodes', function(assert) {
 });
 
 QUnit.test('Get one element',function(assert) {
-	assert.expect(4);
+	assert.expect(6);
 	var el = $('.test');
-	assert.ok(typeof el == 'object' && el.quarked, 'Quarked node');
+	assert.ok(typeof el == 'object' && el.quarked && el.node.nodeName == 'DIV', 'Quarked node');
 	assert.ok(typeof el.findOne == 'function', 'findOne() is defined');
 	assert.ok(typeof el.findAll == 'function', 'findAll() is defined');
 	el = $('.notfound');
 	assert.ok(el.node === null, 'Not found');
+	el = $($('.test'));
+	assert.ok(typeof el == 'object' && el.quarked && el.node.nodeName == 'DIV', '$($())');
+	el = $($$('.test'));
+	assert.ok(typeof el == 'object' && el.quarked && el.node.nodeName == 'DIV', '$($$())');
 });
 
 QUnit.test('Get several elements',function(assert) {
-	assert.expect(7);
+	assert.expect(9);
 	var els = $$('.test');
 	assert.ok(typeof els == 'object' && 'length' in els, 'Is an array');
 	assert.ok(els.length == 3, 'Has three nodes');
@@ -49,6 +53,10 @@ QUnit.test('Get several elements',function(assert) {
 	assert.ok(typeof els == 'object' && 'length' in els && els.length == 0, 'Not found');
 	els = $$('.test', true);
 	assert.ok(!('quarked' in els[0]) && !('quarked' in els[1]) && !('quarked' in els[2]), 'Normal nodes');
+	els = $$($('.test'));
+	assert.ok(els.length == 1 && els[0].quarked && els[0].node.nodeName == 'DIV', '$$($())');
+	els = $$($$('.test'));
+	assert.ok(els.length == 3 && els[0].quarked && els[0].node.nodeName && els[1].quarked && els[1].node.nodeName && els[2].quarked && els[2].node.nodeName == 'DIV', '$$($$())');
 });
 
 QUnit.test('forEach()',function(assert) {

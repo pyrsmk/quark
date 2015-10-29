@@ -1,4 +1,4 @@
-/*! quark 2.1.0 (https://github.com/pyrsmk/quark) */
+/*! quark 2.1.1 (https://github.com/pyrsmk/quark) */
 
 /*
 	Retrieve only one node
@@ -24,6 +24,9 @@ var $ = function(spec) {
 		else {
 			quark = node2quark($._selectNode(spec));
 		}
+	}
+	else if (typeof spec == 'object' && spec !== null && 'length' in spec) {
+		quark = node2quark(spec[0]);
 	}
 	else {
 		quark = node2quark(spec);
@@ -58,10 +61,14 @@ $$ = function(spec, raw) {
 		}
 	}
 	// Convert nodes
-	if((typeof spec == 'object') && ('length' in spec)) {
+	if(typeof spec == 'object' && spec !== null && 'length' in spec) {
 		for(i = 0, j = spec.length; i < j; ++i) {
 			quarks.push(!raw ? node2quark(spec[i]) : spec[i]);
 		}
+	}
+	// Quarked node
+	else if (typeof spec == 'object' && 'quarked' in spec) {
+		quarks.push(spec);
 	}
 	// Add global methods
 	for(i in $._nodeMethods) {
@@ -73,7 +80,12 @@ $$ = function(spec, raw) {
 				}
 				if(results.length) {
 					// Quark nodes detected, return them
-					if((typeof results[0] == 'object') && ('length' in results[0]) && results[0].length) {
+					if(
+						typeof results[0] == 'object' &&
+						spec !== null &&
+						'length' in results[0] &&
+						results[0].length
+					) {
 						if('quarked' in results[0][0]) {
 							results2 = [];
 							for(i = 0, j = results.length; i < j; ++i) {
