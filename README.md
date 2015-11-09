@@ -73,7 +73,7 @@ Selecting nodes
 
 `$()` will return one wrapped node.
 
-`$$()` will return a list of wrapped. A `forEach()` method has been added to this node list to iterate over those nodes.
+`$$()` will return a list of wrapped. A `forEach()` method has been added to iterate over the nodes.
 
 ```js
 $$('.comments').forEach(function(index) {
@@ -82,6 +82,12 @@ $$('.comments').forEach(function(index) {
 	// the this keyword points to the current node
 	this.css('background', 'red');
 });
+```
+
+If you want to retrieve an array of nodes instead of an array of wrapped nodes, set `true` as second argument (really useful when some library expects an array of nodes) :
+
+```js
+var nodes = $$('.comments', true);
 ```
 
 Creating nodes
