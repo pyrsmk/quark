@@ -1,3 +1,14 @@
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], function() {
+    	return (root.quark = factory());
+    });
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.quark = factory();
+  }
+}(this, function() {
 /*! quark 2.1.3 (https://github.com/pyrsmk/quark) */
 
 /*
@@ -225,3 +236,6 @@ return {
 	$ : $,
 	$$ : $$
 };
+
+return Quark;
+}));

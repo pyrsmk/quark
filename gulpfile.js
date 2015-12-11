@@ -42,6 +42,7 @@ gulp.task('build', ['version'], function() {
 				return 'quark';
 			}
 		}) )
+		.pipe( gulp.dest('.') )
 		.pipe( uglify() )
 		.pipe( rename({suffix:'.min'}) )
 		.pipe( gulp.dest('.') );
