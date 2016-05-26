@@ -1,7 +1,7 @@
 {
   "name": "pyrsmk-quark",
   "description": "Another micro-framework",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "author": "Aurélien Delogu <pyrsmk@dreamysource.fr> (http://dreamysource.fr)",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "url": "https://github.com/pyrsmk/quark/issues",
     "email": "dev@dreamysource.fr"
   },
-  "homepage": "http://dreamysource.fr/product/quark",
+  "homepage": "http://dreamysource.io/project/quark",
   "devDependencies": {
     "gulp": "^3.8.11",
     "gulp-jshint": "^1.11.0",

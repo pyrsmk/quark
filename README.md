@@ -1,4 +1,4 @@
-quark 2.1.3
+quark 2.1.4
 ===========
 
 Quark is a small javascript library that aims to let you compose your own framework from scratch. It brings a different syntax than the other frameworks which is a lot more intuitive and browser-friendly.

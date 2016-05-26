@@ -1,7 +1,7 @@
 {
   "name": "pyrsmk-quark",
   "description": "Another micro-framework",
-  "main": "src/quark.js",
+  "main": "quark.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/pyrsmk/quark.git"
@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/pyrsmk/quark/issues"
   },
-  "homepage": "http://dreamysource.fr/product/quark",
+  "homepage": "http://dreamysource.io/project/quark",
   "ignore": [
     ".git/",
     ".gitignore",

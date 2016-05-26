@@ -9,7 +9,7 @@
     root.quark = factory();
   }
 }(this, function() {
-/*! quark 2.1.3 (https://github.com/pyrsmk/quark) */
+/*! quark 2.1.4 (https://github.com/pyrsmk/quark) */
 
 /*
 	Retrieve only one node
