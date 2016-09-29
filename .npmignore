@@ -2,6 +2,6 @@
 .gitignore
 nodes_modules/
 tests/
-Gruntfile.js
+gulpfile.js
 package.json
 lib/

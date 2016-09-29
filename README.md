@@ -32,7 +32,7 @@ $('.foo .bar').data('state', 'ok');
 $$('.comments').css('background', 'red');
 ```
 
-Note that `data()` and `css()` methods are available by installing [quarky](https://github.com/pyrsmk/quarky) (that we're strongly to advise you to install).
+Note that `data()` and `css()` methods are available by installing [quarky](https://github.com/pyrsmk/quarky), a good companion for quark.
 
 Basics
 ------
