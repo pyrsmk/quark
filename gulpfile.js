@@ -9,7 +9,7 @@ gulp.task('version', function() {
 	var replace = require('gulp-replace');
     
 	return gulp.src( './README.md' )
-        .pipe( replace(/^(\w+) [0-9.]+/, '$1 ' + version) )
+        .pipe( replace(/^([\w-]+) [0-9.]+/, '$1 ' + version) )
         .pipe( gulp.dest('.') );
     
 });
