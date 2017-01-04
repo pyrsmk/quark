@@ -1,7 +1,7 @@
 {
   "name": "pyrsmk-quark",
   "description": "Another micro-framework",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "author": "Aurélien Delogu <pyrsmk@dreamysource.fr> (http://dreamysource.fr)",
   "repository": {
     "type": "git",
