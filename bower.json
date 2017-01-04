@@ -1,7 +1,7 @@
 {
   "name": "pyrsmk-quark",
   "description": "Another micro-framework",
-  "main": "quark.js",
+  "main": "lib/quark.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/pyrsmk/quark.git"

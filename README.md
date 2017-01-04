@@ -1,4 +1,4 @@
-quark 2.1.4
+quark 2.2.0
 ===========
 
 Quark is a small javascript library that aims to let you compose your own framework from scratch. It brings a different syntax than the other frameworks which is a lot more intuitive and browser-friendly.
@@ -11,7 +11,6 @@ Installation
 ```
 npm install pyrsmk-quark
 bower install pyrsmk-quark
-jam install pyrsmk-quark
 ```
 
 As Ender, you'll need to install third-party libraries to add ajax, animations, etc... But it has a basic support for readiness, node selection and creation.
